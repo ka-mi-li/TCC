@@ -54,11 +54,12 @@ body {
 .botao {
     padding: 15px 200px;
     background-color: #f2f2f2;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
     border: 3px solid #d9d9d9;
     border-radius: 100px;
+    font-family: 'Questrial', sans-serif; 
 }
 
 .botao:hover {
@@ -70,11 +71,12 @@ body {
     padding: 10px 50px;
     margin-top: 10px;
     margin-bottom: -40px;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
     transition: background-color 0.3s;
     border: 3px solid #d9d9d9;
     border-radius: 100px;
+    font-family: 'Questrial', sans-serif; 
 }
 
 #logout:hover {
