@@ -24,7 +24,7 @@ body {
 #imagem {
     position: absolute;
     left: 13%;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
 }
 
@@ -32,7 +32,7 @@ body {
 #botoes {
     position: absolute;
     right: 10%;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column; /*agora os botões ficam um atrás do outro */
@@ -52,15 +52,22 @@ body {
 
 /* Estilo dos botões */
 .botao {
-    padding: 15px 200px;
+    display: block;
+    width: 480px; /* largura fixa para todos os botões */
+    padding: 15px 0; /* padding só vertical */
     background-color: #f2f2f2;
     font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
     border: 3px solid #d9d9d9;
     border-radius: 100px;
-    font-family: 'Questrial', sans-serif; 
+    font-family: 'Questrial', sans-serif;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    box-sizing: border-box;
 }
+
 
 .botao:hover {
     background-color: #ddd;
@@ -77,6 +84,8 @@ body {
     border: 3px solid #d9d9d9;
     border-radius: 100px;
     font-family: 'Questrial', sans-serif; 
+    text-decoration: none;
+    color: black;
 }
 
 #logout:hover {
