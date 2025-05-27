@@ -1,137 +1,163 @@
 const editarBtn = document.getElementById("editarBtn");
+const salvarBtn = document.getElementById("salvarBtn");
+const sairBtn = document.getElementById("sairBtn");
+const addTurmaBtn = document.getElementById("addturmaBtn");
 const turmasContainer = document.getElementById("turmasContainer");
 
 let modoEdicaoAtivo = false;
 
-editarBtn.addEventListener("click", () => {
-  modoEdicaoAtivo = !modoEdicaoAtivo;
+// Estado guarda array de objetos {nome, href}
+let estadoOriginal = [];
 
-  if (modoEdicaoAtivo) {
-    editarBtn.textContent = "salvar";
-    ativarModoEdicao();
-    adicionarBotaoAdicionar();
-  } else {
-    editarBtn.textContent = "editar";
-    removerModoEdicao();
-    removerBotaoAdicionar();
-  }
+editarBtn.addEventListener("click", () => {
+  modoEdicaoAtivo = true;
+  ativarModoEdicao();
 });
 
-function ativarModoEdicao() {
-  const botoes = turmasContainer.querySelectorAll(".botao:not(#adicionarTurma)");
+salvarBtn.addEventListener("click", () => {
+  salvarEstado();
+  modoEdicaoAtivo = false;
+  desativarModoEdicao();
+  alert("Alterações salvas.");
+});
 
-  botoes.forEach((botao) => {
-    botao.addEventListener("click", editarTurma);
+sairBtn.addEventListener("click", () => {
+  restaurarEstado();
+  modoEdicaoAtivo = false;
+  desativarModoEdicao();
+  alert("Alterações desfeitas.");
+});
+
+addTurmaBtn.addEventListener("click", () => {
+  adicionarNovaTurma();
+});
+
+function salvarEstado() {
+  estadoOriginal = [];
+  const links = turmasContainer.querySelectorAll("a.link");
+  links.forEach(link => {
+    const btn = link.querySelector("button.botao");
+    estadoOriginal.push({
+      nome: btn.textContent,
+      href: link.href
+    });
   });
 }
 
-function removerModoEdicao() {
-  const botoes = turmasContainer.querySelectorAll(".botao:not(#adicionarTurma)");
+function restaurarEstado() {
+  // Remove todas as turmas atuais (links com botões)
+  const links = turmasContainer.querySelectorAll("a.link");
+  links.forEach(link => link.remove());
 
-  botoes.forEach((botao) => {
-    botao.removeEventListener("click", editarTurma);
+  // Recria a partir do estado salvo
+  estadoOriginal.forEach(turma => {
+    const novoBotao = criarBotaoTurma(turma.nome, turma.href);
+    turmasContainer.insertBefore(novoBotao, editarBtn);
   });
+}
+
+function ativarModoEdicao() {
+  const botoes = turmasContainer.querySelectorAll("a.link > button.botao");
+  botoes.forEach(botao => {
+    botao.addEventListener("click", interceptarClique);
+  });
+}
+
+function desativarModoEdicao() {
+  const botoes = turmasContainer.querySelectorAll("a.link > button.botao");
+  botoes.forEach(botao => {
+    botao.removeEventListener("click", interceptarClique);
+  });
+}
+
+function interceptarClique(e) {
+  e.preventDefault(); // impede navegação no modo edição
+  editarTurma(e);
 }
 
 function editarTurma(e) {
-  const acao = prompt(
-    `Você quer editar ou excluir a turma "${e.target.textContent}"?\nDigite:\nnão para editar\nsim para excluir`
-  );
+  const acao = prompt(`Você quer excluir a turma "${e.target.textContent}"?\nDigite: sim para excluir / não para editar`);
 
   if (acao === "não") {
-    let novoNome = null;
+    let novoNome = prompt("Novo nome da turma:", e.target.textContent);
+    if (novoNome === null) return;
 
-    do {
-      novoNome = prompt("Novo nome da turma:", e.target.textContent);
-      if (novoNome === null) {
-        return; // cancelou edição
-      }
-      novoNome = novoNome.trim();
-      if (novoNome === "") {
-        alert("O nome da turma não pode ser vazio.");
-        continue;
-      }
+    novoNome = novoNome.trim();
+    if (novoNome === "") {
+      alert("O nome da turma não pode ser vazio.");
+      return;
+    }
 
-      // Verifica se já existe outro botão com esse nome (case insensitive), exceto ele mesmo
-      const botoes = turmasContainer.querySelectorAll(".botao:not(#adicionarTurma)");
-      let existe = false;
-      for (const botao of botoes) {
-        if (
-          botao !== e.target &&
-          botao.textContent.toLowerCase() === novoNome.toLowerCase()
-        ) {
-          alert("Já existe uma turma com esse nome.");
-          existe = true;
-          break;
-        }
-      }
-
-      if (!existe) break; // nome válido, sai do loop
-    } while (true);
+    // Verifica duplicado (ignorando o próprio botão)
+    const duplicado = Array.from(turmasContainer.querySelectorAll("button.botao")).some(
+      btn => btn !== e.target && btn.textContent.toLowerCase() === novoNome.toLowerCase()
+    );
+    if (duplicado) {
+      alert("Já existe uma turma com esse nome.");
+      return;
+    }
 
     e.target.textContent = novoNome;
+
+    // Atualiza o href do link para refletir o nome novo
+    const link = e.target.parentElement;
+    link.href = criarHrefPeloNome(novoNome);
+
   } else if (acao === "sim") {
     const confirmar = confirm("Tem certeza que deseja excluir esta turma?");
     if (confirmar) {
-      e.target.remove();
+      e.target.parentElement.remove(); // remove o <a> que envolve o botão
     }
   }
 }
 
-function adicionarBotaoAdicionar() {
-  if (!document.getElementById("adicionarTurma")) {
-    const btn = document.createElement("button");
-    btn.id = "adicionarTurma";
-    btn.className = "botao";
-    btn.textContent = "+";
+function adicionarNovaTurma() {
+  let nome = prompt("Nome da nova turma:");
+  if (nome === null) return;
 
-    btn.addEventListener("click", () => {
-      let nome = null;
-
-      do {
-        nome = prompt("Nome da nova turma:");
-        if (nome === null) {
-          return; // usuário cancelou
-        }
-        nome = nome.trim();
-
-        if (nome === "") {
-          alert("O nome da turma não pode ser vazio.");
-          continue;
-        }
-
-        const botoes = turmasContainer.querySelectorAll(".botao:not(#adicionarTurma)");
-        let existe = false;
-        for (const botao of botoes) {
-          if (botao.textContent.toLowerCase() === nome.toLowerCase()) {
-            alert("Já existe uma turma com esse nome.");
-            existe = true;
-            break;
-          }
-        }
-        if (!existe) break; // nome válido
-      } while (true);
-
-      const novoBotao = document.createElement("button");
-      novoBotao.className = "botao";
-      novoBotao.textContent = nome;
-      if (modoEdicaoAtivo) {
-        novoBotao.addEventListener("click", editarTurma);
-      }
-
-      const editarBtn = document.getElementById("editarBtn");
-      turmasContainer.insertBefore(novoBotao, editarBtn);
-    });
-
-    const editarBtn = document.getElementById("editarBtn");
-    turmasContainer.insertBefore(btn, editarBtn);
+  nome = nome.trim();
+  if (nome === "") {
+    alert("O nome da turma não pode ser vazio.");
+    return;
   }
+
+  const existe = Array.from(turmasContainer.querySelectorAll("button.botao")).some(
+    btn => btn.textContent.toLowerCase() === nome.toLowerCase()
+  );
+  if (existe) {
+    alert("Já existe uma turma com esse nome.");
+    return;
+  }
+
+  const novoBotao = criarBotaoTurma(nome, criarHrefPeloNome(nome));
+  turmasContainer.insertBefore(novoBotao, editarBtn);
 }
 
-function removerBotaoAdicionar() {
-  const botaoAdicionar = document.getElementById("adicionarTurma");
-  if (botaoAdicionar) {
-    botaoAdicionar.remove();
+function criarBotaoTurma(nome, href) {
+  const link = document.createElement("a");
+  link.href = href;
+  link.className = "link";
+
+  const btn = document.createElement("button");
+  btn.className = "botao";
+  btn.textContent = nome;
+
+  if (modoEdicaoAtivo) {
+    btn.addEventListener("click", interceptarClique);
   }
+
+  link.appendChild(btn);
+  return link;
 }
 
+// Função para criar href baseado no nome da turma (ajuste conforme seu padrão)
+function criarHrefPeloNome(nome) {
+  // Exemplo: "M1" vira "turmam1.html"
+  return `turma${nome.toLowerCase()}.html`;
+}
+
+// Ao carregar a página, salva o estado inicial
+window.addEventListener("DOMContentLoaded", () => {
+  salvarEstado();
+  desativarModoEdicao();
+});

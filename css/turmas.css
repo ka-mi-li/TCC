@@ -2,31 +2,17 @@
 
 body {
   margin: 0;
-padding: 0;
-font-family: 'Questrial', sans-serif;
-background: url('/imagens/fotofundo2.jpg') no-repeat center center/cover;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
+  font-family: "Questrial", sans-serif;
+  background: linear-gradient(to bottom, #f8d6e3 40%, #fff7e1 60%);
+  background-image: url('../imagens/fotofundo2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
 }
-
-.logo {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 2em;
-      font-weight: bold;
-      color: white;
-    }
-
- .flecha {
-      position: absolute;
-      top: 50px;
-      left: 10px;
-      font-size: 2em;
-      color: white;
-    }
 
 .turma-titulo {
   background: white;

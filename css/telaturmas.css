@@ -21,11 +21,14 @@
       transform: translate(-50%, 0);
       background: white;
       border-radius: 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       padding: 30px 20px;
-      width: 500px;
+      width: 300px;
       text-align: center;
-      box-shadow:  0 0 40px rgba(0, 0, 0, 0.9);
-      border: 3px solid #d9d9d9;
+      overflow: auto;
+      height: 350px;
+      border: 1px solid #ccc; 
+      
     }
 
     .botao {
@@ -39,7 +42,7 @@
       cursor: pointer;
     }
 
-    .botaodeeditar {
+    .botoesacao {
       background: #fddde6;
       color: black;
       border-radius: 15px;
