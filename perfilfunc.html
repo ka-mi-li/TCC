@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Perfil do Funcionário</title>
+  <title>Perfil do Professor</title>
   <link rel="stylesheet" href="/css/perfilprof.css"/>
 
 </head>
@@ -28,13 +28,14 @@
 
       <label for="cargo">Cargo</label>
       <select id="cargo" disabled>
-        <option value="feminino">Professor</option>
-        <option value="masculino">Estagiário</option>
-        <option value="outro">Diretor</option>
+        <option value="feminino">Feminino</option>
+        <option value="masculino">Masculino</option>
+        <option value="outro">Outro</option>
       </select>
     </form>
   </div>
-  
+
+  <!-- Botão Editar -->
   <button id="editar">Editar</button>
 
   <script>
@@ -50,8 +51,8 @@
 
     // Evento para ir para a tela de edição
     document.getElementById('editar').addEventListener('click', () => {
-      // Redirecionar para a página de edição
-      window.location.href = 'editarfunc.html';
+      // Redirecionar para a página de edição (alterar o caminho conforme seu projeto)
+      window.location.href = '/editarperfilprof.html';
     });
   </script>
 </body>

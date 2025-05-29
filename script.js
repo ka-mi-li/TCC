@@ -1,6 +1,5 @@
 const editarBtn = document.getElementById("editarBtn");
 const salvarBtn = document.getElementById("salvarBtn");
-const sairBtn = document.getElementById("sairBtn");
 const addTurmaBtn = document.getElementById("addturmaBtn");
 const turmasContainer = document.getElementById("turmasContainer");
 
@@ -19,13 +18,6 @@ salvarBtn.addEventListener("click", () => {
   modoEdicaoAtivo = false;
   desativarModoEdicao();
   alert("Alterações salvas.");
-});
-
-sairBtn.addEventListener("click", () => {
-  restaurarEstado();
-  modoEdicaoAtivo = false;
-  desativarModoEdicao();
-  alert("Alterações desfeitas.");
 });
 
 addTurmaBtn.addEventListener("click", () => {
